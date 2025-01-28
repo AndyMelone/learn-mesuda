@@ -1,0 +1,39 @@
+services:
+  redis-server:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  pgsql-server:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: medusa_my_medusa_store 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgsql-data:/var/lib/postgresql/data
+    depends_on:
+      - redis-server
+
+  adminer-client:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - pgsql-server
+      - redis-server
+
+volumes:
+  redis-data:
+  pgsql-data:
