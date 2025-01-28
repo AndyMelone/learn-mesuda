@@ -12,7 +12,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: medusa_my_medusa_store 
+      POSTGRES_DB: medusa_my_medusa_store
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 1s
@@ -29,7 +29,17 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "8080:8080"
+    depends_on:
+      - pgsql-server
+      - redis-server
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
     depends_on:
       - pgsql-server
       - redis-server
