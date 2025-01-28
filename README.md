@@ -26,6 +26,12 @@ docker compose up -d
 ```zsh
 yarn predeploy
 ```
+
+### CREATE ADMIN USER
+```zsh
+npx medusa user -e admin@medusajs.com -p supersecret
+```
+
  
 ### RUN APPLICATION
 ```zsh
