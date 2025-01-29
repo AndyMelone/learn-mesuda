@@ -1,13 +1,15 @@
 services:
-  redis-server:
+  redis_server:
     image: redis
     restart: always
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    networks:
+      - medusa-network
 
-  pgsql-server:
+  pgsql_server:
     image: postgres
     restart: always
     environment:
@@ -22,17 +24,19 @@ services:
       - "5432:5432"
     volumes:
       - pgsql-data:/var/lib/postgresql/data
-    depends_on:
-      - redis-server
+    networks:
+      - medusa-network
 
-  adminer-client:
+  adminer_client:
     image: adminer
     restart: always
     ports:
       - "8080:8080"
     depends_on:
-      - pgsql-server
-      - redis-server
+      - pgsql_server
+      - redis_server
+    networks:
+      - medusa-network
 
   app:
     build:
@@ -40,10 +44,20 @@ services:
       dockerfile: Dockerfile
     ports:
       - "9000:9000"
+    command: ["sh", "-c", "yarn predeploy && yarn run dev"]   
+    environment:
+      DATABASE_URL: postgres://postgres:root@pgsql_server:5432/medusa_my_medusa_store?sslmode=disable
+      REDIS_URL: redis://redis_server:6379       
     depends_on:
-      - pgsql-server
-      - redis-server
+      - pgsql_server
+      - redis_server
+    networks:
+      - medusa-network
 
 volumes:
   redis-data:
   pgsql-data:
+
+networks:
+  medusa-network:
+    driver: bridge

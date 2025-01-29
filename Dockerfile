@@ -4,5 +4,5 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
-RUN yarn predeploy
+# RUN yarn predeploy
 CMD  yarn run dev
