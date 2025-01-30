@@ -43,11 +43,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "9000:9000"
-    command: ["sh", "-c", "yarn predeploy && yarn run dev"]   
-    environment:
-      DATABASE_URL: postgres://postgres:root@pgsql_server:5432/medusa_my_medusa_store?sslmode=disable
-      REDIS_URL: redis://redis_server:6379       
+      - "9000:9000"      
     depends_on:
       - pgsql_server
       - redis_server
