@@ -10,6 +10,12 @@ module.exports = defineConfig({
     {
       resolve: "@medusajs/medusa/workflow-engine-inmemory",
     },
+    {
+      resolve: "./src/modules/cms",
+      options: {
+        apiKey: process.env.CMS_API_KEY,
+      },
+    },
   ],
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
