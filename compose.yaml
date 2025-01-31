@@ -54,9 +54,10 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      POSTGRES_URL: postgresql://neondb_owner:npg_CUBlmue5v0Xh@ep-little-snowflake-a8mdnfcy-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+      DATABASE_URL: postgresql://postgres:root@pgsql_server:5432/medusa_my_medusa_stores
+      # POSTGRES_URL: postgresql://neondb_owner:npg_CUBlmue5v0Xh@ep-little-snowflake-a8mdnfcy-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
       DATABASE_TYPE: postgres
-      DATABASE_URL: postgresql://neondb_owner:npg_CUBlmue5v0Xh@ep-little-snowflake-a8mdnfcy-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+      # DATABASE_URL: postgresql://neondb_owner:npg_CUBlmue5v0Xh@ep-little-snowflake-a8mdnfcy-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
       POSTGRES_HOST: pgsql_server
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres
