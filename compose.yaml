@@ -15,15 +15,26 @@ services:
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: medusa_my_medusa_stores
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command: 
+      - "postgres"
+      - "-c"
+      - "ssl=off"
+      - "-c"
+      - "listen_addresses=*"
+      - "-c"
+      - "hba_file=/etc/postgresql/pg_hba.conf"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 1s
       timeout: 5s
       retries: 10
-    ports:
-      - "5432:5432"
     volumes:
       - pgsql-data:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+    ports:
+      - "5432:5432"
     networks:
       - medusa-network
 
@@ -38,17 +49,31 @@ services:
     networks:
       - medusa-network
 
-  # app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "9000:9000"      
-  #   depends_on:
-  #     - pgsql_server
-  #     - redis_server
-  #   networks:
-  #     - medusa-network
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_URL: postgresql://neondb_owner:npg_CUBlmue5v0Xh@ep-little-snowflake-a8mdnfcy-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+      DATABASE_TYPE: postgres
+      DATABASE_URL: postgresql://neondb_owner:npg_CUBlmue5v0Xh@ep-little-snowflake-a8mdnfcy-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+      POSTGRES_HOST: pgsql_server
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DATABASE: medusa_my_medusa_stores
+      REDIS_URL: redis://redis_server:6379
+      NODE_ENV: development 
+      JWT_SECRET: your-super-secret
+      COOKIE_SECRET: your-super-secret
+      PGSSLMODE: disable
+    ports:
+      - "9000:9000"      
+    depends_on:
+      - pgsql_server
+      - redis_server
+    networks:
+      - medusa-network
 
 volumes:
   redis-data:
